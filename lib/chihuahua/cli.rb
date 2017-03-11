@@ -47,8 +47,8 @@ module Chihuahua
     private
 
     def dog
-      api_key = ENV['BARKDOG_API_KEY']
-      app_key = ENV['BARKDOG_APP_KEY']
+      api_key = ENV['DATADOG_API_KEY']
+      app_key = ENV['DATADOG_APP_KEY']
       Dogapi::Client.new(api_key, app_key)
     end
 
