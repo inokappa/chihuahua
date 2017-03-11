@@ -56,7 +56,7 @@ module Chihuahua
     end
 
     def create_project_root_dir
-      FileUtils.mkdir_p(project_root_dir) unless FileTest.exist?('./monitors')
+      FileUtils.mkdir_p('./monitors') unless FileTest.exist?('./monitors')
     end
 
     def filter_monitor(monitor)
