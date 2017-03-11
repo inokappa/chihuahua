@@ -79,6 +79,8 @@ monitors/
       warning: 0.8
 ```
 
+詳細は http://docs.datadoghq.com/ja/api/?lang=ruby#monitor-create を御確認ください.
+
 - dry-run
 
 ```sh
@@ -133,6 +135,8 @@ done.
       critical: 1.0
       warning: 0.8
 ```
+
+詳細は http://docs.datadoghq.com/ja/api/?lang=ruby#monitor-edit を御確認ください.
 
 - dry-run
 
