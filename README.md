@@ -26,7 +26,7 @@ export BARKDOG_APP_KEY=...
 
 bundle exec ./bin/chihuahua init
 bundle exec ./bin/chihuahua export --project=your_project_name --tags=project:foo,stage:production
-vi ./monitors/your_project_name/Monitors
+vi ./monitors/your_project_name/monitors.yml
 bundle exec ./bin/chihuahua apply --project=your_project_name --dry-run
 bundle exec ./bin/chihuahua apply --project=your_project_name
 ```
@@ -52,12 +52,13 @@ $ bundle exec ./bin/chihuahua export --project=foo --tags=host:vagrant-ubuntu-tr
 Export...
 4 monitors output done.
 
-$ tree monitors/
+$ tree -a monitors/
 monitors/
 └── foo
-    └── Monitors
+    ├── .filter.yml
+    └── monitors.yml
 
-1 directory, 1 file
+1 directory, 2 files
 ```
 
 ### 新規作成
