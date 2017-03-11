@@ -23,7 +23,8 @@ module Chihuahua
     option :tags, type: :array, aliases: '-t', desc: 'Monitor を tags キーで絞り込む.'
     def export
       puts coloring.color('Export...', :green, :bold, :underline)
-      export_monitors(options[:project], options[:name], options[:tags])
+      monitors_data = export_monitors(options[:name], options[:tags])
+      store_monitors_data(monitors_data, options[:project], options[:name], options[:tags])
     end
 
     desc 'apply', 'Monitor 設定を apply する'
@@ -57,6 +58,7 @@ module Chihuahua
 
     def create_project_root_dir
       FileUtils.mkdir_p('./monitors') unless FileTest.exist?('./monitors')
+      puts 'done.'
     end
 
     def filter_monitor(monitor)
@@ -65,7 +67,30 @@ module Chihuahua
       return filterd_monitor
     end
 
-    def export_monitors(project, name = nil, tags = nil)
+    def store_monitors_data(monitors_data, project, name, tags)
+      project_dir = './monitors/' + project
+      FileUtils.mkdir_p(project_dir) unless FileTest.exist?(project_dir)
+
+      filter = {}
+      filter['name'] = name
+      filter['tags'] = tags
+      begin
+        # YAML.dump(JSON.load(filter.to_json), File.open(project_dir + '/.filter.yml', 'w'))
+        YAML.dump(filter, File.open(project_dir + '/.filter.yml', 'w'))
+      rescue => e
+        puts e
+      end
+
+      begin
+        # YAML.dump(JSON.load(monitors_data.to_json), File.open(project_dir + '/monitors.yml', 'w'))
+        YAML.dump(monitors_data, File.open(project_dir + '/monitors.yml', 'w'))
+      rescue => e
+        puts e
+      end
+      puts monitors_data.length.to_s + ' monitors output done.'
+    end
+
+    def export_monitors(name = nil, tags = nil)
       filterd_monitors = []
       begin
         dog.get_all_monitors({:name => name, :tags => tags}).last.each do |monitor|
@@ -74,35 +99,27 @@ module Chihuahua
       rescue => e
         puts e
       end
-
-      project_dir = './monitors/' + project
-      FileUtils.mkdir_p(project_dir) unless FileTest.exist?(project_dir)
-
-      begin
-        YAML.dump(JSON.load(filterd_monitors.to_json), File.open(project_dir + '/Monitors', 'w'))
-      rescue => e
-        puts e
-      end
-      puts filterd_monitors.length.to_s + ' monitors output done.'
+      return filterd_monitors
     end
 
-    def get_current_monitor(id)
-      begin
-        monitor = dog.get_monitor(id).last
-      rescue => e
-        puts e
-      end
-      return filter_monitor(monitor)
+    def get_filter(project)
+      filter = open('./monitors/' + project + '/.filter.yml', 'r') { |f| YAML.load(f) }
+      return filter
     end
 
     def update_monitors(project, dry_run)
-      datas = open('./monitors/' + project + '/Monitors', 'r') { |f| YAML.load(f) }
+      filter = get_filter(project)
+      current_monitors = export_monitors(filter['name'], filter['tags']) { |f| YAML.load(f) }
+      datas = open('./monitors/' + project + '/monitors.yml', 'r') { |f| YAML.load(f) }
       datas.each do |data|
+        # 新規登録 or 更新のチェック(id キーが有れば更新)
         if data.has_key?('id') then
-          current = YAML.dump(get_current_monitor(data['id']))
-          latest = YAML.dump(data)
-          diff = Diffy::Diff.new(current, latest).to_s(:color)
+          current_monitor = YAML.dump(current_monitors.select {|m| m['id'] == data['id']}.last)
+          latest_monitor = YAML.dump(data)
+          diff = Diffy::Diff.new(current_monitor, latest_monitor).to_s(:color)
+          # 差分の有無をチェック(diff != "\n" であれば差分が有ると判断)
           if diff != "\n" then
+            # --dry-run フラグのチェック
             if dry_run != nil then
               puts coloring.color('Check update line.', :gray, :underline)
               puts diff
@@ -110,22 +127,24 @@ module Chihuahua
             else
               puts coloring.color('Update line.', :yellow, :underline)
               begin
-                dog.update_monitor(data['id'], data['query'], :message => data['message'], :name => data['name'])
+                res = dog.update_monitor(data['id'], data['query'], :message => data['message'], :name => data['name'], :options => data['options'])
               rescue => e
                 puts e
               end
-              puts 'done.'
+              puts coloring.color(res.last.to_s, :light_cyan)
             end
           end
         else
+          # 新規登録
+          # --dry-run フラグのチェック
           if dry_run == nil then
             puts coloring.color('Add line.', :yellow, :underline)
             begin
-              dog.monitor(data['type'], data['query'], :message => data['message'], :name => data['name'])
+              res = dog.monitor(data['type'], data['query'], :message => data['message'], :name => data['name'], :options => data['options'])
             rescue => e
               puts e
             end
-            puts 'done.'
+            puts coloring.color(res.last.to_s, :light_cyan)
           else
             puts coloring.color('Check add line.', :gray, :underline)
             puts coloring.color(YAML.dump(data), :light_cyan)
@@ -133,6 +152,7 @@ module Chihuahua
           end
         end
       end
+      puts 'done.'
     end
 
   end
