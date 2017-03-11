@@ -1,6 +1,6 @@
 # Chihuahua
 
-[chihuahua](https://github.com/inokappa/chihuahua/blob/master/images/chihuahua.png)
+[chihuahua](https://raw.githubusercontent.com/inokappa/chihuahua/master/images/chihuahua.png)
 
 Chihuahua は [Datadog monitors](http://docs.datadoghq.com/guides/monitoring/) を管理するツールです.
 
