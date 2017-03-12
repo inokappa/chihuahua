@@ -1,7 +1,6 @@
 # coding: utf-8
 module Chihuahua
-  class Common
-
+  module Helper
     def create_project_root_dir
       FileUtils.mkdir_p('./monitors') unless FileTest.exist?('./monitors')
       puts 'done.'
@@ -22,5 +21,9 @@ module Chihuahua
       HighLine.new
     end
 
+    module_function :create_project_root_dir
+    module_function :filter_monitor
+    module_function :get_filter
+    module_function :hl
   end
 end

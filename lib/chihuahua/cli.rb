@@ -17,7 +17,7 @@ module Chihuahua
       puts Chihuahua::VERSION
     end
 
-    desc 'export', 'Monitor 設定を export する'
+    desc 'export', 'Monitors 定義を export する'
     option :project, type: :string, aliases: '-p', desc: 'Project を指定.(Project 名でディレクトリを作成する)'
     option :name, type: :string, aliases: '-n', desc: 'Monitor を name キーで絞り込む.'
     option :tags, type: :array, aliases: '-t', desc: 'Monitor を tags キーで絞り込む.'
@@ -28,7 +28,7 @@ module Chihuahua
       exporter.store_monitors_data(monitors_data, options[:project], options[:name], options[:tags])
     end
 #
-    desc 'apply', 'Monitor 設定を apply する'
+    desc 'apply', 'Monitors 定義を apply する'
     option :project, type: :string, aliases: '-p', desc: 'Project を指定.'
     option :dry_run, type: :boolean, aliases: '-d', desc: 'apply 前の試行.'
     def apply
@@ -41,9 +41,15 @@ module Chihuahua
       updater.update_monitors(options[:project], options[:dry_run])
     end
 
+    desc 'generate', 'Monitors 定義の雛形を生成する.'
+    option :project, type: :string, aliases: '-p', desc: 'Project を指定.'
+    def generate
+      #
+    end
+
     desc 'init', 'Project の Root ディレクトリ(./monitors)を作成する.'
     def init
-      Chihuahua::Common.new.create_project_root_dir
+      Chihuahua::Helper.create_project_root_dir
     end
 
   end
