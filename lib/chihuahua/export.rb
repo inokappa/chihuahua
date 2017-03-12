@@ -4,12 +4,13 @@ module Chihuahua
 
     def initialize
       # @dog = Chihuahua::Client.new
-      api_key = ENV['DATADOG_API_KEY']
-      app_key = ENV['DATADOG_APP_KEY']
-      raise 'API Key がセットされていません.' unless api_key
-      raise 'Application Key がセットされていません.' unless app_key
-
-      @dog = Dogapi::Client.new(api_key, app_key)
+      # api_key = ENV['DATADOG_API_KEY']
+      # app_key = ENV['DATADOG_APP_KEY']
+      # raise 'API Key がセットされていません.' unless api_key
+      # raise 'Application Key がセットされていません.' unless app_key
+#
+      # @dog = Dogapi::Client.new(api_key, app_key)
+      @dog = Chihuahua::Client.new.dog
     end
 
     def export_monitors(name = nil, tags = nil)
