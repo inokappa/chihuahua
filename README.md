@@ -63,7 +63,7 @@ monitors/
 
 ### 新規作成
 
-- YAML 定義を ./monitors/your_project_name/Monitors に追記
+- YAML 定義を ./monitors/your_project_name/monitors.yml に追記
 
 ```yaml
 - query: avg(last_1m):avg:system.load.5{host:vagrant-ubuntu-trusty-64} > 1

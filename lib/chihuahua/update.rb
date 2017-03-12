@@ -9,6 +9,11 @@ module Chihuahua
       @exporter = Chihuahua::Export.new
     end
 
+    def apply_result_display(res)
+      result = res.last
+      puts hl.color(result['name'], :light_cyan) + ' を apply しました.'
+    end
+
     def update_monitor(data)
       puts hl.color('Update line.', :yellow, :underline)
       begin
@@ -16,7 +21,7 @@ module Chihuahua
       rescue => e
         puts e
       end
-      puts hl.color(res.last.to_s, :light_cyan)
+      apply_result_display(res)
     end
 
     def create_monitor
@@ -26,13 +31,14 @@ module Chihuahua
       rescue => e
         puts e
       end
-      puts hl.color(res.last.to_s, :light_cyan)
+      apply_result_display(res)
     end
 
     def update_monitors(project, dry_run)
+      project_dir = './monitors/' + project
       filter = get_filter(project)
       current_monitors = @exporter.export_monitors(filter['name'], filter['tags']) { |f| YAML.load(f) }
-      datas = open('./monitors/' + project + '/monitors.yml', 'r') { |f| YAML.load(f) }
+      datas = open(project_dir + '/monitors.yml', 'r') { |f| YAML.load(f) }
       datas.each do |data|
         # 新規登録 or 更新のチェック(id キーが有れば更新)
         if data.has_key?('id') then
