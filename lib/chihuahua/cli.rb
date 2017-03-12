@@ -22,6 +22,11 @@ module Chihuahua
     option :name, type: :string, aliases: '-n', desc: 'Monitor を name キーで絞り込む.'
     option :tags, type: :array, aliases: '-t', desc: 'Monitor を tags キーで絞り込む.'
     def export
+      unless options[:project] then
+        puts 'Project 名がセットされていません. (--project xxxxxx)'
+        exit 1
+      end
+
       puts 'Export...'
       exporter = Chihuahua::Export.new
       monitors_data = exporter.export_monitors(options[:name], options[:tags])

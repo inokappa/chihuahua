@@ -8,10 +8,15 @@ module Chihuahua
       @dog = Chihuahua::Client.new.dog
     end
 
+    def export_result_display(name)
+      puts hl.color(name, :light_cyan) + ' を export しました.'
+    end
+
     def export_monitors(name = nil, tags = nil)
       filterd_monitors = []
       begin
         @dog.get_all_monitors({:name => name, :tags => tags}).last.each do |monitor|
+          export_result_display(monitor['name'])
           filterd_monitors << filter_monitor(monitor)
         end
       rescue => e
@@ -21,7 +26,6 @@ module Chihuahua
     end
 
     def store_monitors_data(monitors_data, project, name, tags)
-      raise 'Project 名がセットされていません.' unless project
       project_dir = './monitors/' + project
       FileUtils.mkdir_p(project_dir) unless FileTest.exist?(project_dir)
 
@@ -39,7 +43,7 @@ module Chihuahua
       rescue => e
         puts e
       end
-      puts monitors_data.length.to_s + ' monitors output done.'
+      puts monitors_data.length.to_s + ' 件の Monitors 定義を出力しました.'
     end
   end
 end
