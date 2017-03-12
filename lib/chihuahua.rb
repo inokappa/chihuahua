@@ -1,6 +1,6 @@
 require "chihuahua/version"
 require "chihuahua/cli"
-# require "chihuahua/client"
+require "chihuahua/client"
 require "chihuahua/common"
 require "chihuahua/export"
 require "chihuahua/update"
