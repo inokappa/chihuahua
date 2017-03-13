@@ -13,10 +13,12 @@ module Chihuahua
     end
 
     def export_monitors(name = nil, tags = nil)
+      call_from = caller[0][/`([^']*)'/, 1]
+
       filterd_monitors = []
       begin
         @dog.get_all_monitors({:name => name, :tags => tags}).last.each do |monitor|
-          export_result_display(monitor['name'])
+          export_result_display(monitor['name']) unless call_from == 'update_monitors'
           filterd_monitors << filter_monitor(monitor)
         end
       rescue => e
