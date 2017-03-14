@@ -24,7 +24,7 @@ module Chihuahua
       apply_result_display(res)
     end
 
-    def create_monitor
+    def create_monitor(data)
       puts hl.color('Add line.', :yellow, :underline)
       begin
         res = @dog.monitor(data['type'], data['query'], :message => data['message'], :name => data['name'], :options => data['options'])
