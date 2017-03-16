@@ -4,9 +4,13 @@ module Chihuahua
 
     include Chihuahua::Helper
 
-    def initialize
+    def initialize(project)
       @dog = Chihuahua::Client.new.dog
-      @exporter = Chihuahua::Export.new
+      @exporter = Chihuahua::Export.new(project)
+      @project = project
+      @project_dir = './monitors/' + @project
+      @monitors_file_path = @project_dir + '/monitors.yml'
+      @filter_file_path = @project_dir + '/.filter.yml'
     end
 
     def apply_result_display(res)
@@ -34,11 +38,11 @@ module Chihuahua
       apply_result_display(res)
     end
 
-    def update_monitors(project, dry_run)
-      project_dir = './monitors/' + project
-      filter = get_filter(project)
-      current_monitors = @exporter.export_monitors(filter['name'], filter['tags']) { |f| YAML.load(f) }
-      datas = open(project_dir + '/monitors.yml', 'r') { |f| YAML.load(f) }
+    def update_monitors(dry_run)
+      filter = get_filter(@project)
+      # current_monitors = @exporter.export_monitors(filter['name'], filter['tags']) { |f| YAML.load(f) }
+      current_monitors = @exporter.export_monitors(@project) { |f| YAML.load(f) }
+      datas = open(@monitors_file_path) { |f| YAML.load(f) }
       datas.each do |data|
         # 新規登録 or 更新のチェック(id キーが有れば更新)
         if data.has_key?('id') then
@@ -54,6 +58,8 @@ module Chihuahua
               puts ''
             else
               update_monitor(data)
+              monitors_data = @exporter.export_monitors(@project)
+              @exporter.store_monitors_data(monitors_data)
             end
           end
         else
@@ -61,6 +67,8 @@ module Chihuahua
           # --dry-run フラグのチェック
           if dry_run == nil then
             create_monitor(data)
+            monitors_data = @exporter.export_monitors(@project)
+            @exporter.store_monitors_data(monitors_data)
           else
             puts hl.color('Check add line.', :gray, :underline)
             puts hl.color(YAML.dump(data), :light_cyan)
