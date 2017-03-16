@@ -32,7 +32,6 @@ module Chihuahua
       args = {}
       args['name'] = options[:name]
       args['tags'] = options[:tags]
-      p args.class
       exporter = Chihuahua::Export.new(options[:project], args)
       monitors_data = exporter.export_monitors(options[:project])
       exporter.store_monitors_data(monitors_data)

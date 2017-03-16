@@ -12,11 +12,24 @@ Chihuahua は [Datadog monitors](http://docs.datadoghq.com/guides/monitoring/) �
 
 ## Installation
 
-```sh
-git clone ...
-cd chihuahua
-bundle install --path vendor/bundle
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'chihuahua'
 ```
+
+And then execute:
+
+```sh
+$ bundle
+```
+
+Or install it yourself as:
+
+```sh
+$ gem install chihuahua
+```
+
 
 ## Usage
 
@@ -24,17 +37,17 @@ bundle install --path vendor/bundle
 export DATADOG_API_KEY=...
 export DATADOG_APP_KEY=...
 
-bundle exec ./bin/chihuahua init
-bundle exec ./bin/chihuahua export --project=your_project_name --tags=project:foo,stage:production
+bundle exec chihuahua init
+bundle exec chihuahua export --project=your_project_name --tags=project:foo,stage:production
 vi ./monitors/your_project_name/monitors.yml
-bundle exec ./bin/chihuahua apply --project=your_project_name --dry-run
-bundle exec ./bin/chihuahua apply --project=your_project_name
+bundle exec chihuahua apply --project=your_project_name --dry-run
+bundle exec chihuahua apply --project=your_project_name
 ```
 
 ## Help
 
 ```
-$ bundle exec ./bin/chihuahua --help
+$ bundle exec chihuahua --help
 Commands:
   chihuahua apply           # Monitor 設定を apply する
   chihuahua export          # Monitor 設定を export する
@@ -48,7 +61,10 @@ Commands:
 ### 書き出し
 
 ```sh
-$ bundle exec ./bin/chihuahua export --project=foo --tags=host:vagrant-ubuntu-trusty-64
+#
+# 初回の書き出し
+#
+$ bundle exec chihuahua export --project=foo --tags=host:vagrant-ubuntu-trusty-64
 Export...
 4 monitors output done.
 
@@ -59,7 +75,15 @@ monitors/
     └── monitors.yml
 
 1 directory, 2 files
+
+#
+# 2 回目以降、絞込の条件（--name や --tags に変更が無い場合）
+#
+$ bundle exec chihuahua export --project=foo
+
 ```
+
+
 
 ### 新規作成
 
@@ -84,7 +108,7 @@ monitors/
 - dry-run
 
 ```sh
-$ bundle exec ./bin/chihuahua apply --project=foo --dry-run
+$ bundle exec chihuahua apply --project=foo --dry-run
 Apply...(dry-run)
 Check add line.
 ---
@@ -104,9 +128,12 @@ options:
 - apply
 
 ```sh
-$ bundle exec ./bin/chihuahua apply --project=foo
+$ bundle exec chihuahua apply --project=foo
 Apply...
 Add line.
+...
+... Latest Monitors List ...
+...
 done.
 ```
 
@@ -141,7 +168,7 @@ done.
 - dry-run
 
 ```sh
-$ bundle exec ./bin/chihuahua apply --project=foo --dry-run
+$ bundle exec chihuahua apply --project=foo --dry-run
 Apply...(dry-run)
 Check update line.
  ---
@@ -169,8 +196,11 @@ Check update line.
 - apply
 
 ```sh
-$ bundle exec ./bin/chihuahua apply --project=foo
+$ bundle exec chihuahua apply --project=foo
 Apply...
 Update line.
+...
+... Latest Monitors List ...
+...
 done.
 ```
