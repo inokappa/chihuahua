@@ -48,6 +48,9 @@ Commands:
 ### 書き出し
 
 ```sh
+#
+# 初回の書き出し
+#
 $ bundle exec ./bin/chihuahua export --project=foo --tags=host:vagrant-ubuntu-trusty-64
 Export...
 4 monitors output done.
@@ -59,7 +62,15 @@ monitors/
     └── monitors.yml
 
 1 directory, 2 files
+
+#
+# 2 回目以降、絞込の条件（--name や --tags に変更が無い場合）
+#
+$ bundle exec ./bin/chihuahua export --project=foo
+
 ```
+
+
 
 ### 新規作成
 
@@ -107,6 +118,9 @@ options:
 $ bundle exec ./bin/chihuahua apply --project=foo
 Apply...
 Add line.
+...
+... Latest Monitors List ...
+...
 done.
 ```
 
@@ -172,5 +186,8 @@ Check update line.
 $ bundle exec ./bin/chihuahua apply --project=foo
 Apply...
 Update line.
+...
+... Latest Monitors List ...
+...
 done.
 ```
