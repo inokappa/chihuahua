@@ -28,9 +28,14 @@ module Chihuahua
       end
 
       puts 'Export...'
-      exporter = Chihuahua::Export.new
-      monitors_data = exporter.export_monitors(options[:name], options[:tags])
-      exporter.store_monitors_data(monitors_data, options[:project], options[:name], options[:tags])
+      # exporter = Chihuahua::Export.new(options[:project])
+      args = {}
+      args['name'] = options[:name]
+      args['tags'] = options[:tags]
+      p args.class
+      exporter = Chihuahua::Export.new(options[:project], args)
+      monitors_data = exporter.export_monitors(options[:project])
+      exporter.store_monitors_data(monitors_data)
     end
 #
     desc 'apply', 'Monitors 定義を apply する'
@@ -42,8 +47,8 @@ module Chihuahua
       else
         puts 'Apply...'
       end
-      updater = Chihuahua::Update.new
-      updater.update_monitors(options[:project], options[:dry_run])
+      updater = Chihuahua::Update.new(options[:project])
+      updater.update_monitors(options[:dry_run])
     end
 
     desc 'generate', 'Monitors 定義の雛形を生成する.'
