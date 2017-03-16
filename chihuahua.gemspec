@@ -6,7 +6,7 @@ require 'chihuahua/version'
 Gem::Specification.new do |spec|
   spec.name          = "chihuahua"
   spec.version       = Chihuahua::VERSION
-  spec.authors       = ["kapp"]
+  spec.authors       = ["inokappa"]
   spec.email         = ["inokara@gmail.com"]
 
   spec.summary       = %q{Chihuahua is a tool to manage Datadog monitors.}
