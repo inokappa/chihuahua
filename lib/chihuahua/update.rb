@@ -43,6 +43,7 @@ module Chihuahua
       # current_monitors = @exporter.export_monitors(filter['name'], filter['tags']) { |f| YAML.load(f) }
       current_monitors = @exporter.export_monitors(@project) { |f| YAML.load(f) }
       datas = open(@monitors_file_path) { |f| YAML.load(f) }
+      apply_flag = []
       datas.each do |data|
         # 新規登録 or 更新のチェック(id キーが有れば更新)
         if data.has_key?('id') then
@@ -52,14 +53,13 @@ module Chihuahua
           # 差分の有無をチェック(diff != "\n" であれば差分が有ると判断)
           if diff != "\n" then
             # --dry-run フラグのチェック
-            if dry_run != nil then
+            if dry_run then
               puts hl.color('Check update line.', :gray, :underline)
               puts diff
               puts ''
             else
               update_monitor(data)
-              monitors_data = @exporter.export_monitors(@project)
-              @exporter.store_monitors_data(monitors_data)
+              apply_flag << '1'
             end
           end
         else
@@ -67,14 +67,17 @@ module Chihuahua
           # --dry-run フラグのチェック
           if dry_run == nil then
             create_monitor(data)
-            monitors_data = @exporter.export_monitors(@project)
-            @exporter.store_monitors_data(monitors_data)
+            apply_flag << '1'
           else
             puts hl.color('Check add line.', :gray, :underline)
             puts hl.color(YAML.dump(data), :light_cyan)
             puts ''
           end
         end
+      end
+      unless dry_run or apply_flag.empty? then
+        monitors_data = @exporter.export_monitors(@project)
+        @exporter.store_monitors_data(monitors_data)
       end
       puts 'done.'
     end
