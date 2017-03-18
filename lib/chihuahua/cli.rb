@@ -34,6 +34,7 @@ module Chihuahua
       args['tags'] = options[:tags]
       exporter = Chihuahua::Export.new(options[:project], args)
       monitors_data = exporter.export_monitors(options[:project])
+      puts monitors_data.length.to_s + ' 件の Monitors 定義を出力しました.'
       exporter.store_monitors_data(monitors_data)
     end
 #

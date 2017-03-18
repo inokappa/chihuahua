@@ -67,7 +67,6 @@ module Chihuahua
       rescue => e
         puts e
       end
-      puts monitors_data.length.to_s + ' 件の Monitors 定義を出力しました.'
     end
   end
 end
