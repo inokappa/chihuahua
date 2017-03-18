@@ -14,7 +14,7 @@ module Chihuahua
     end
 
     def export_result_display(name)
-      puts hl.color(name, :magenta) + ' を export しました.'
+      puts hl.color(name, :magenta) + ' exporting...'
     end
 
     def export_monitors(project)
@@ -67,6 +67,7 @@ module Chihuahua
       rescue => e
         puts e
       end
+      puts 'done.'
     end
   end
 end
