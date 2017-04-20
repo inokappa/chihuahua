@@ -15,7 +15,8 @@ module Chihuahua
 
     def apply_result_display(res)
       result = res.last
-      puts hl.color(result['name'], :light_cyan) + ' applying...'
+      puts hl.color(result['name'], :light_cyan) + ' applying...' unless result.nil?
+      puts 'applying...'
     end
 
     def update_monitor(data)
