@@ -16,7 +16,7 @@ module Chihuahua
     def apply_result_display(res)
       result = res.last
       puts hl.color(result['name'], :light_cyan) + ' applying...' unless result.nil?
-      puts 'applying...'
+      puts 'applying...' if result.nil?
     end
 
     def update_monitor(data)
@@ -80,7 +80,7 @@ module Chihuahua
         monitors_data = @exporter.export_monitors(@project)
         @exporter.store_monitors_data(monitors_data)
       end
-      puts 'done.'
+      puts 'updated done.'
     end
 
   end

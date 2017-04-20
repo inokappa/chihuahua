@@ -67,7 +67,7 @@ module Chihuahua
       rescue => e
         puts e
       end
-      puts 'done.'
+      puts 'stored done.'
     end
   end
 end
