@@ -38,6 +38,7 @@ export DATADOG_API_KEY=...
 export DATADOG_APP_KEY=...
 
 bundle exec chihuahua init
+bundle exec chihuahua export --project=your_project_name --tags=project:foo,stage:production --dry-run
 bundle exec chihuahua export --project=your_project_name --tags=project:foo,stage:production
 vi ./monitors/your_project_name/monitors.yml
 bundle exec chihuahua apply --project=your_project_name --dry-run
