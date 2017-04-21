@@ -14,9 +14,7 @@ module Chihuahua
     end
 
     def apply_result_display(res)
-      result = res.last
-      puts hl.color(result['name'], :light_cyan) + ' applying...' unless result.nil?
-      puts 'applying...' if result.nil?
+      puts hl.color(res['name'], :light_cyan) + ' applying...'
     end
 
     def update_monitor(data)
@@ -26,7 +24,8 @@ module Chihuahua
       rescue => e
         puts e
       end
-      apply_result_display(res)
+      raise res.last unless res.first == '200'
+      apply_result_display(res.last)
     end
 
     def create_monitor(data)
@@ -36,7 +35,8 @@ module Chihuahua
       rescue => e
         puts e
       end
-      apply_result_display(res)
+      raise res.last unless res.first == '200'
+      apply_result_display(res.last)
     end
 
     def update_monitors(dry_run)
